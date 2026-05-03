@@ -769,6 +769,7 @@ const showRegularRitual = async (mode) => {
     const container = document.getElementById('ritual-slides');
     const dayOfWeek = new Date().getDay();
     const verse = bibleVerses[dayOfWeek % bibleVerses.length];
+    const userName = localStorage.getItem('user_name') || 'Ami';
     
     const moodHtml = `
         <div class="mood-tracker" style="margin: 1.5rem 0; padding: 1rem; background: rgba(var(--fg-rgb), 0.02); border-radius: 16px; border: 1px solid rgba(var(--fg-rgb), 0.03);">
@@ -789,7 +790,7 @@ const showRegularRitual = async (mode) => {
     if (mode === 'morning') {
         content = `
             <div class="ritual-slide active">
-                <p class="ritual-greeting" style="margin-bottom: 0.5rem;">Bonjour Aaron,</p>
+                <p class="ritual-greeting" style="margin-bottom: 0.5rem;">Bonjour ${userName},</p>
                 <h2 class="ritual-message" style="font-size: 1.4rem; line-height: 1.3;">Par la grâce de Dieu, tu t'es réveillé.</h2>
                 
                 <div class="bible-verse" style="margin: 1.5rem 0; padding: 1rem; border-left: 1px solid var(--fg); text-align: left;">
@@ -816,7 +817,7 @@ const showRegularRitual = async (mode) => {
     } else {
         content = `
             <div class="ritual-slide active">
-                <p class="ritual-greeting" style="margin-bottom: 0.5rem;">Bonsoir Aaron,</p>
+                <p class="ritual-greeting" style="margin-bottom: 0.5rem;">Bonsoir ${userName},</p>
                 <h2 class="ritual-message" style="font-size: 1.4rem; line-height: 1.3;">La journée touche à sa fin. Fais le point sur tes habitudes.</h2>
                 ${moodHtml}
                 <div class="ritual-actions" style="margin-top:1.5rem">
@@ -839,11 +840,12 @@ window.showRecap = (type) => {
     const ritualOverlay = document.getElementById('morning-ritual');
     if (!ritualOverlay) return;
     
+    const userName = localStorage.getItem('user_name') || 'Ami';
     const stats = calculateRecapStats(type);
     currentRecapSlides = [
         {
             title: `Bilan de ${type === 'weekly' ? 'ta semaine' : 'ton mois'}`,
-            content: `Prêt pour une rétrospective, Aaron ?<br>Voyons comment tu as progressé.`,
+            content: `Prêt pour une rétrospective, ${userName} ?<br>Voyons comment tu as progressé.`,
             action: "C'est parti"
         },
         {
@@ -1030,6 +1032,42 @@ window.generateTestData = () => {
     console.log("✅ Données de test générées avec succès !");
 };
 
+window.showOnboarding = () => {
+    const ritualOverlay = document.getElementById('morning-ritual');
+    const container = document.getElementById('ritual-slides');
+    
+    container.innerHTML = `
+        <div class="ritual-slide active">
+            <h2 class="ritual-message" style="margin-bottom: 2rem;">Bienvenue.<br>Comment puis-je vous appeler ?</h2>
+            <input type="text" id="user-name-input" placeholder="Votre prénom" 
+                style="background: transparent; border: none; border-bottom: 2px solid var(--fg); color: var(--fg); font-size: 2rem; text-align: center; width: 100%; outline: none; padding-bottom: 0.5rem; margin-bottom: 3rem;">
+            <div class="ritual-actions">
+                <button class="btn-vip" onclick="setUserName()">COMMENCER L'EXPÉRIENCE</button>
+            </div>
+        </div>
+    `;
+    
+    ritualOverlay.style.display = 'flex';
+    setTimeout(() => {
+        ritualOverlay.style.opacity = '1';
+        document.getElementById('user-name-input').focus();
+    }, 50);
+};
+
+window.setUserName = () => {
+    const name = document.getElementById('user-name-input').value.trim();
+    if (name) {
+        localStorage.setItem('user_name', name);
+        const ritualOverlay = document.getElementById('morning-ritual');
+        ritualOverlay.style.opacity = '0';
+        setTimeout(() => {
+            ritualOverlay.style.display = 'none';
+            // Refresh rituals to use the new name
+            checkDailyRitual();
+        }, 500);
+    }
+};
+
 // Init
 const startApp = async () => {
     updateDate();
@@ -1041,6 +1079,11 @@ const startApp = async () => {
     } else {
         habits = JSON.parse(localStorage.getItem('habits')) || [];
         if (habits.length > 0) await saveToDB(habits); // Migrate
+    }
+
+    // Personalization: Check for name
+    if (!localStorage.getItem('user_name')) {
+        showOnboarding();
     }
     
     renderHabits();
