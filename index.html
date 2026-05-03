@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Habit Tracker</title>
+    <meta name="description" content="A modern, minimalist habit tracker PWA with iOS aesthetic.">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+    <div id="morning-ritual" class="morning-ritual">
+        <button class="btn-close-ritual" onclick="dismissRitual()">&times;</button>
+        <div id="ritual-slides" class="ritual-slides">
+            <!-- Slides will be injected here -->
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1 id="app-title">Habitudes</h1>
+            <p class="date-today" id="current-date">Dimanche 3 Mai</p>
+        </header>
+
+        <div id="sleep-prompt" class="sleep-prompt" style="display: none;">
+            <!-- Sleep prompt will be injected here -->
+        </div>
+
+        <main id="habit-list" class="habit-list">
+            <!-- Habits will be injected here -->
+        </main>
+
+        <section id="stats-view" class="stats-view" style="display: none;">
+            <div id="global-stats-content">
+                <!-- Stats will be injected here -->
+            </div>
+        </section>
+
+        <nav class="bottom-nav">
+            <div class="nav-indicator" id="nav-indicator"></div>
+            <a class="nav-item active" id="nav-habits">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Habits</span>
+            </a>
+            <a class="nav-item" id="nav-tracking">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <span>Tracking</span>
+            </a>
+            <a class="nav-item" id="nav-export">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Export</span>
+            </a>
+            <input type="file" id="import-input" style="display: none;" accept=".json">
+        </nav>
+
+        <button class="fab" id="add-habit-btn" aria-label="Ajouter une habitude">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <h2>Nouvelle habitude</h2>
+            <input type="text" id="habit-input" placeholder="Ex: Lire, Méditer..." autofocus>
+            <input type="text" id="habit-unit" placeholder="Unité (optionnel): min, verres, km...">
+            <input type="number" id="habit-step" placeholder="Incrément (ex: 15, 1, 0.5)" value="1">
+            
+            <div style="display: flex; gap: 1rem;">
+                <input type="number" id="habit-goal" placeholder="Objectif (ex: 30)" style="flex: 2; margin-bottom: 1.5rem;">
+                <select id="habit-frequency" style="flex: 3; padding: 1.2rem; background: var(--card-bg); border: none; border-radius: var(--radius-md); color: var(--fg); font-family: inherit; font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    <option value="daily">Par jour</option>
+                    <option value="weekly">Par semaine</option>
+                    <option value="monthly">Par mois</option>
+                </select>
+            </div>
+            
+            <div style="font-size: 0.8rem; margin-bottom: 0.8rem; opacity: 0.5;">VISUEL</div>
+            <div class="icon-picker" id="icon-picker">
+                <div class="icon-option selected" data-icon="book"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
+                <div class="icon-option" data-icon="fitness"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h12M12 18V6M6 6h12"></path></svg></div>
+                <div class="icon-option" data-icon="food"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2"></path><path d="M10 22V10"></path><path d="M2 10h16"></path><path d="M14 22V10"></path></svg></div>
+                <div class="icon-option" data-icon="cutlery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2v15"></path><path d="M22 2v15a4 4 0 0 1-8 0V2"></path><path d="M2 2v20"></path><path d="M2 4h5"></path><path d="M5 2v20"></path></svg></div>
+                <div class="icon-option" data-icon="sleep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div>
+                <div class="icon-option" data-icon="zen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg></div>
+                <div class="icon-option" data-icon="water"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg></div>
+                <div class="icon-option" data-icon="code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+                <div class="icon-option" data-icon="heart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></div>
+            </div>
+
+            <button class="btn-primary" id="save-habit-btn">Enregistrer</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW registered'))
+                    .catch(err => console.log('SW error', err));
+            });
+        }
+    </script>
+</body>
+</html>
