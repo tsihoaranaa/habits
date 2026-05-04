@@ -1257,12 +1257,13 @@ const startApp = async () => {
 
     // Add to Homescreen Initialization
     if (window.AddToHomeScreen) {
-        window.AddToHomeScreenInstance = new window.AddToHomeScreen({
-            appName: 'Habits',
-            appIconUrl: 'icons/icon-192.png',
+        window.AddToHomeScreenInstance = window.AddToHomeScreen({
+            appName: 'Habitudes',
+            appIconUrl: 'icons/icon-512.png',
             assetUrl: 'https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@3.5/dist/assets/img/',
-            maxDisplayCount: 3
+            maxModalDisplayCount: -1 // Show every time for testing until user closes
         });
+        window.AddToHomeScreenInstance.show('fr');
     }
 
     // iOS PWA Navigation Fix
