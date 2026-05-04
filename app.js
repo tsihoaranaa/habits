@@ -1276,11 +1276,24 @@ const startApp = async () => {
         }, false);
     }
 
-    // Service Worker Registration
+    // Service Worker Registration with update detection
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('🚀 Service Worker Ready'))
+                .then(reg => {
+                    console.log('🚀 Service Worker Ready');
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed') {
+                                if (navigator.serviceWorker.controller) {
+                                    console.log('✨ New version found, reloading...');
+                                    window.location.reload();
+                                }
+                            }
+                        };
+                    };
+                })
                 .catch(err => console.log('❌ SW Registration Failed', err));
         });
     }
