@@ -41,6 +41,40 @@
             </div>
         </section>
 
+        <section id="profile-view" class="profile-view" style="display: none;">
+            <div class="profile-section">
+                <div class="profile-field">
+                    <label for="profile-name">Prénom</label>
+                    <input type="text" id="profile-name" placeholder="Votre prénom">
+                </div>
+                <div class="profile-field">
+                    <label for="profile-city">Ville (pour la météo)</label>
+                    <input type="text" id="profile-city" placeholder="Ex: Lyon, Antananarivo, Paris...">
+                </div>
+                <div class="profile-field">
+                    <label for="profile-age">Âge</label>
+                    <input type="number" id="profile-age" placeholder="Votre âge">
+                </div>
+                <div class="profile-field">
+                    <label for="profile-music">Lecteur de musique par défaut</label>
+                    <select id="profile-music">
+                        <option value="spotify">Spotify</option>
+                        <option value="apple">Apple Music</option>
+                        <option value="deezer">Deezer</option>
+                    </select>
+                </div>
+                <div class="profile-field">
+                    <label for="profile-bible">Version de la Bible</label>
+                    <select id="profile-bible">
+                        <option value="S21">Bible S21</option>
+                        <option value="BPM">Baiboly Protestanta Malagasy</option>
+                        <option value="NIV">New International Version (NIV)</option>
+                    </select>
+                </div>
+                <button class="btn-primary" id="save-profile-btn" style="margin-top: 1rem;">Enregistrer les modifications</button>
+            </div>
+        </section>
+
         <nav class="bottom-nav">
             <div class="nav-indicator" id="nav-indicator"></div>
             <a class="nav-item active" id="nav-habits">
@@ -50,6 +84,10 @@
             <a class="nav-item" id="nav-tracking">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                 <span>Tracking</span>
+            </a>
+            <a class="nav-item" id="nav-profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Profil</span>
             </a>
             <a class="nav-item" id="nav-export">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>

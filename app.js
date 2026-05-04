@@ -88,19 +88,42 @@ const calculateCurrentStreak = (history) => {
     return streak;
 };
 
-const bibleVerses = [
-    { text: "Ne t'ai-je pas donné cet ordre: Fortifie-toi et prends courage? Ne t'effraie point et ne t'épouvante point, car l'Éternel, ton Dieu, est avec toi dans tout ce que tu entreprendras.", ref: "Josué 1:9" },
-    { text: "Je puis tout par celui qui me fortifie, Christ.", ref: "Philippiens 4:13" },
-    { text: "Ne promène pas des regards inquiets, car je suis ton Dieu; Je te fortifie, je viens à ton secours.", ref: "Ésaïe 41:10" },
-    { text: "Car ce n'est pas un esprit de timidité que Dieu nous a donné, mais un esprit de force, d'amour et de sagesse.", ref: "2 Timothée 1:7" },
-    { text: "Confie-toi en l'Éternel de tout ton cœur, et ne t'appuie pas sur ta sagesse.", ref: "Proverbes 3:5" },
-    { text: "L'Éternel est mon berger: je ne manquerai de rien.", ref: "Psaume 23:1" },
-    { text: "Si Dieu est pour nous, qui sera contre nous?", ref: "Romains 8:31" },
-    { text: "Mais ceux qui se confient en l'Éternel renouvellent leur force. Ils prennent le vol comme les aigles.", ref: "Ésaïe 40:31" }
-];
+const bibleVerses = {
+    S21: [
+        { text: "Ne t'ai-je pas donné cet ordre: Fortifie-toi et prends courage? Ne t'effraie point et ne t'épouvante point, car l'Éternel, ton Dieu, est avec toi dans tout ce que tu entreprendras.", ref: "Josué 1:9" },
+        { text: "Je puis tout par celui qui me fortifie, Christ.", ref: "Philippiens 4:13" },
+        { text: "Ne promène pas des regards inquiets, car je suis ton Dieu; Je te fortifie, je viens à ton secours.", ref: "Ésaïe 41:10" },
+        { text: "Car ce n'est pas un esprit de timidité que Dieu nous a donné, mais un esprit de force, d'amour et de sagesse.", ref: "2 Timothée 1:7" },
+        { text: "Confie-toi en l'Éternel de tout ton cœur, et ne t'appuie pas sur ta sagesse.", ref: "Proverbes 3:5" },
+        { text: "L'Éternel est mon berger: je ne manquerai de rien.", ref: "Psaume 23:1" },
+        { text: "Si Dieu est pour nous, qui sera contre nous?", ref: "Romains 8:31" },
+        { text: "Mais ceux qui se confient en l'Éternel renouvellent leur force. Ils prennent le vol comme les aigles.", ref: "Ésaïe 40:31" }
+    ],
+    BPM: [
+        { text: "Tsy efa nandidy anao va Aho? Mahereza sy mahatanjaha; aza matahotra na mivadi-po, fa momba anao Jehovah Andriamanitrao amin'izay rehetra alehanao.", ref: "Josua 1:9" },
+        { text: "Mahay ny zavatra rehetra aho ao amin'Ilay mampahery ahy.", ref: "Filipiana 4:13" },
+        { text: "Aza matahotra ianao, fa momba anao Aho; aza mivadi-po, fa Izaho no Andriamanitrao; mampahery anao Aho sady hamonjy anao.", ref: "Isaia 41:10" },
+        { text: "Fa tsy nomen'Andriamanitra fanahy feno tahotra isika, fa fanahy feno hery sy fitiavana ary fahononam-po.", ref: "2 Timoty 1:7" },
+        { text: "Matokia an'i Jehovah amin'ny fonao rehetra, fa aza miankina amin'ny fahalalanao.", ref: "Ohabolana 3:5" },
+        { text: "Jehovah no Mpiandry ahy; tsy hanan-java-mahory aho.", ref: "Salamo 23:1" },
+        { text: "Raha Andriamanitra no momba antsika, iza no hahatohitra antsika?", ref: "Romana 8:31" },
+        { text: "Fa izay miandry an'i Jehovah dia hahazo hery vaovao; hanidina elatra toy ny voromahery izy.", ref: "Isaia 40:31" }
+    ],
+    NIV: [
+        { text: "Have I not commanded you? Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref: "Joshua 1:9" },
+        { text: "I can do all this through him who gives me strength.", ref: "Philippians 4:13" },
+        { text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you.", ref: "Isaiah 41:10" },
+        { text: "For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.", ref: "2 Timothy 1:7" },
+        { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
+        { text: "The Lord is my shepherd, I lack nothing.", ref: "Psalm 23:1" },
+        { text: "If God is for us, who can be against us?", ref: "Romans 8:31" },
+        { text: "But those who hope in the Lord will renew their strength. They will soar on wings like eagles.", ref: "Isaiah 40:31" }
+    ]
+};
 
 const moodEmojis = ["😫", "😕", "😐", "🙂", "🤩"];
 const moodLabels = ["Épuisé", "Bof", "Neutre", "Bien", "Inarrêtable"];
+
 
 const iconMap = {
     book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
@@ -119,6 +142,10 @@ const updateDate = () => {
     const options = { weekday: 'long', day: 'numeric', month: 'long' };
     const today = new Date();
     currentDateElement.textContent = today.toLocaleDateString('fr-FR', options);
+    
+    // Initialize nav indicator position
+    const navIndicator = document.querySelector('.nav-indicator');
+    if (navIndicator) navIndicator.style.width = 'calc((100% - 20px) / 4)';
 };
 
 // Get last 7 days
@@ -400,6 +427,7 @@ document.getElementById('nav-habits').addEventListener('click', (e) => {
     setActiveNav('nav-habits');
     habitView.style.display = 'flex';
     statsView.style.display = 'none';
+    profileView.style.display = 'none';
     addHabitBtn.style.display = 'flex';
 });
 
@@ -408,9 +436,57 @@ document.getElementById('nav-tracking').addEventListener('click', (e) => {
     setActiveNav('nav-tracking');
     habitView.style.display = 'none';
     statsView.style.display = 'block';
+    profileView.style.display = 'none';
     addHabitBtn.style.display = 'none';
     renderStats();
 });
+
+
+document.getElementById('nav-profile').addEventListener('click', (e) => {
+    e.preventDefault();
+    setActiveNav('nav-profile');
+    habitView.style.display = 'none';
+    statsView.style.display = 'none';
+    profileView.style.display = 'block';
+    addHabitBtn.style.display = 'none';
+    loadProfile();
+});
+
+const profileView = document.getElementById('profile-view');
+
+const loadProfile = () => {
+    const name = localStorage.getItem('user_name') || '';
+    const age = localStorage.getItem('user_age') || '';
+    const city = localStorage.getItem('user_city') || 'Lyon';
+    const music = localStorage.getItem('pref_music') || 'spotify';
+    const bible = localStorage.getItem('pref_bible') || 'S21';
+
+    document.getElementById('profile-name').value = name;
+    document.getElementById('profile-age').value = age;
+    document.getElementById('profile-city').value = city;
+    document.getElementById('profile-music').value = music;
+    document.getElementById('profile-bible').value = bible;
+};
+
+const saveProfile = () => {
+    const name = document.getElementById('profile-name').value.trim();
+    const age = document.getElementById('profile-age').value;
+    const city = document.getElementById('profile-city').value.trim();
+    const music = document.getElementById('profile-music').value;
+    const bible = document.getElementById('profile-bible').value;
+
+    if (name) localStorage.setItem('user_name', name);
+    if (age) localStorage.setItem('user_age', age);
+    if (city) localStorage.setItem('user_city', city);
+    localStorage.setItem('pref_music', music);
+    localStorage.setItem('pref_bible', bible);
+
+    alert('Profil mis à jour !');
+};
+
+
+document.getElementById('save-profile-btn').addEventListener('click', saveProfile);
+
 
 const calculateStreak = (history) => {
     if (!history) return 0;
@@ -598,10 +674,13 @@ const setActiveNav = (id) => {
     const index = items.indexOf(activeItem);
     const itemWidth = (document.querySelector('.bottom-nav').offsetWidth - 20) / items.length;
     
+    indicator.style.width = `calc((100% - 20px) / ${items.length})`;
     indicator.style.transform = `translateY(-50%) translateX(${index * itemWidth}px)`;
 };
 
 document.getElementById('import-input').addEventListener('change', importHabits);
+
+
 
 // Sleep Tracker Logic
 const checkSleepPrompt = () => {
@@ -688,7 +767,20 @@ window.handleSleepAction = (type) => {
 // Morning Ritual Logic
 const fetchWeather = async () => {
     try {
-        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=45.76&longitude=4.83&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=Europe%2FBerlin');
+        const city = localStorage.getItem('user_city') || 'Lyon';
+        
+        // Geocoding step
+        const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=fr&format=json`);
+        const geoData = await geoResponse.json();
+        
+        let lat = 45.76, lon = 4.83, cityName = "Lyon";
+        if (geoData.results && geoData.results.length > 0) {
+            lat = geoData.results[0].latitude;
+            lon = geoData.results[0].longitude;
+            cityName = geoData.results[0].name;
+        }
+
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto`);
         const data = await response.json();
         
         const temp = Math.round(data.current_weather.temperature);
@@ -696,7 +788,7 @@ const fetchWeather = async () => {
         const max = Math.round(data.daily.temperature_2m_max[0]);
 
         document.querySelector('.weather-temp').textContent = `${temp}°`;
-        document.querySelector('.weather-details').textContent = `Lyon • Min: ${min}° | Max: ${max}°`;
+        document.querySelector('.weather-details').textContent = `${cityName} • Min: ${min}° | Max: ${max}°`;
     } catch (err) {
         document.querySelector('.weather-details').textContent = "Météo indisponible";
     }
@@ -768,7 +860,9 @@ const showRegularRitual = async (mode) => {
     const ritualOverlay = document.getElementById('morning-ritual');
     const container = document.getElementById('ritual-slides');
     const dayOfWeek = new Date().getDay();
-    const verse = bibleVerses[dayOfWeek % bibleVerses.length];
+    const biblePref = localStorage.getItem('pref_bible') || 'S21';
+    const versesForVersion = bibleVerses[biblePref] || bibleVerses.S21;
+    const verse = versesForVersion[dayOfWeek % versesForVersion.length];
     const userName = localStorage.getItem('user_name') || 'Ami';
     
     const moodHtml = `
@@ -806,10 +900,28 @@ const showRegularRitual = async (mode) => {
                 </div>
 
                 <div class="ritual-actions">
-                    <a href="spotify:" class="btn-vip btn-spotify-vip">
-                        <svg viewBox="0 0 24 24" fill="#1DB954" width="18" height="18"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.508 17.302c-.216.354-.672.464-1.026.248-2.846-1.74-6.428-2.13-10.648-1.168-.404.093-.81-.16-.902-.562-.092-.403.16-.81.562-.902 4.62-1.056 8.584-.614 11.766 1.332.354.216.464.672.248 1.052zm1.467-3.258c-.27.439-.843.582-1.282.312-3.259-2.002-8.225-2.584-12.078-1.413-.493.15-.1.85-.343.85-.493-.15-.85-.1.85-.343 4.408-1.338 9.888-.684 13.611 1.604.439.27.582.843.312 1.282zm.127-3.413c-3.907-2.321-10.347-2.535-14.114-1.391-.6.182-1.242-.163-1.424-.763-.182-.6.163-1.242.763-1.424 4.318-1.311 11.442-1.057 15.946 1.619.539.32.716 1.018.396 1.557-.319.539-1.018.717-1.557.396z"/></svg>
-                        <span>OUVRIR SPOTIFY</span>
-                    </a>
+                    ${(() => {
+                        const musicPref = localStorage.getItem('pref_music') || 'spotify';
+                        let musicLink = "spotify:";
+                        let musicLabel = "OUVRIR SPOTIFY";
+                        
+                        if (musicPref === 'apple') {
+                            musicLink = "music:";
+                            musicLabel = "OUVRIR APPLE MUSIC";
+                        } else if (musicPref === 'deezer') {
+                            musicLink = "deezer:";
+                            musicLabel = "OUVRIR DEEZER";
+                        }
+                        
+                        const headphonesIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="margin-right: 8px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>`;
+                        
+                        return `
+                            <a href="${musicLink}" class="btn-vip btn-spotify-vip">
+                                ${headphonesIcon}
+                                <span>${musicLabel}</span>
+                            </a>
+                        `;
+                    })()}
                     <button class="btn-vip" onclick="dismissRitual()">TRACKER MES HABITUDES</button>
                 </div>
             </div>
@@ -842,6 +954,10 @@ window.showRecap = (type) => {
     
     const userName = localStorage.getItem('user_name') || 'Ami';
     const stats = calculateRecapStats(type);
+    const biblePref = localStorage.getItem('pref_bible') || 'S21';
+    const versesForVersion = bibleVerses[biblePref] || bibleVerses.S21;
+    const verse = versesForVersion[Math.floor(Math.random() * versesForVersion.length)];
+    
     currentRecapSlides = [
         {
             title: `Bilan de ${type === 'weekly' ? 'ta semaine' : 'ton mois'}`,
@@ -872,11 +988,11 @@ window.showRecap = (type) => {
             action: "Finalement"
         },
         {
-            title: "Cap sur la suite",
+            label: "Cap sur la suite",
             content: `
                 <div class="bible-verse" style="margin-top: 1rem; padding: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
-                    <p style="font-style: italic; font-size: 1rem; margin-bottom: 0.5rem;">"${bibleVerses[Math.floor(Math.random() * bibleVerses.length)].text}"</p>
-                    <p style="font-weight: 700; font-size: 0.75rem; opacity: 0.5;">— Bible S21</p>
+                    <p style="font-style: italic; font-size: 1rem; margin-bottom: 0.5rem;">"${verse.text}"</p>
+                    <p style="font-weight: 700; font-size: 0.75rem; opacity: 0.5;">— Bible ${biblePref}</p>
                 </div>
             `,
             action: "Terminer le bilan"
@@ -1036,13 +1152,44 @@ window.showOnboarding = () => {
     const ritualOverlay = document.getElementById('morning-ritual');
     const container = document.getElementById('ritual-slides');
     
+    // Slide 1: Welcome
     container.innerHTML = `
-        <div class="ritual-slide active">
-            <h2 class="ritual-message" style="margin-bottom: 2rem;">Bienvenue.<br>Comment puis-je vous appeler ?</h2>
-            <input type="text" id="user-name-input" placeholder="Votre prénom" 
-                style="background: transparent; border: none; border-bottom: 2px solid var(--fg); color: var(--fg); font-size: 2rem; text-align: center; width: 100%; outline: none; padding-bottom: 0.5rem; margin-bottom: 3rem;">
+        <div class="ritual-slide active" id="onboarding-s1">
+            <h2 class="ritual-message" style="margin-bottom: 2rem; font-size: 1.8rem; line-height: 1.4;">App de suivi d'habitudes + daily bible verse motivation, ça te tente ?</h2>
             <div class="ritual-actions">
-                <button class="btn-vip" onclick="setUserName()">COMMENCER L'EXPÉRIENCE</button>
+                <button class="btn-vip" onclick="onboardingNext()">C'EST PARTI</button>
+            </div>
+        </div>
+        <div class="ritual-slide" id="onboarding-s2">
+            <h2 class="ritual-message" style="margin-bottom: 2rem;">Quelques infos pour personnaliser ton expérience.</h2>
+            
+            <div style="text-align: left; width: 100%; max-width: 320px; margin: 0 auto;">
+                <label style="font-size: 0.7rem; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Prénom</label>
+                <input type="text" id="onboarding-name" placeholder="Ton prénom" 
+                    style="background: rgba(var(--fg-rgb), 0.05); border: none; border-radius: 12px; color: var(--fg); font-size: 1.1rem; width: 100%; outline: none; padding: 1rem; margin-bottom: 1.5rem;">
+                
+                <label style="font-size: 0.7rem; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Ville</label>
+                <input type="text" id="onboarding-city" placeholder="Ex: Lyon, Paris..." 
+                    style="background: rgba(var(--fg-rgb), 0.05); border: none; border-radius: 12px; color: var(--fg); font-size: 1.1rem; width: 100%; outline: none; padding: 1rem; margin-bottom: 1.5rem;">
+                
+                <label style="font-size: 0.7rem; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Lecteur Musique</label>
+                <select id="onboarding-music" style="background: rgba(var(--fg-rgb), 0.05); border: none; border-radius: 12px; color: var(--fg); font-size: 1.1rem; width: 100%; outline: none; padding: 1rem; margin-bottom: 1.5rem; appearance: none;">
+                    <option value="spotify" style="color: #000;">Spotify</option>
+                    <option value="apple" style="color: #000;">Apple Music</option>
+                    <option value="deezer" style="color: #000;">Deezer</option>
+                </select>
+
+                <label style="font-size: 0.7rem; font-weight: 700; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.1em; display: block; margin-bottom: 0.5rem;">Version de la Bible</label>
+                <select id="onboarding-bible" style="background: rgba(var(--fg-rgb), 0.05); border: none; border-radius: 12px; color: var(--fg); font-size: 1.1rem; width: 100%; outline: none; padding: 1rem; margin-bottom: 2rem; appearance: none;">
+                    <option value="S21" style="color: #000;">Bible S21</option>
+                    <option value="BPM" style="color: #000;">Baiboly Protestanta Malagasy</option>
+                    <option value="NIV" style="color: #000;">New International Version (NIV)</option>
+                </select>
+            </div>
+
+
+            <div class="ritual-actions">
+                <button class="btn-vip" onclick="completeOnboarding()">COMMENCER L'EXPÉRIENCE</button>
             </div>
         </div>
     `;
@@ -1050,23 +1197,39 @@ window.showOnboarding = () => {
     ritualOverlay.style.display = 'flex';
     setTimeout(() => {
         ritualOverlay.style.opacity = '1';
-        document.getElementById('user-name-input').focus();
     }, 50);
 };
 
-window.setUserName = () => {
-    const name = document.getElementById('user-name-input').value.trim();
+window.onboardingNext = () => {
+    document.getElementById('onboarding-s1').classList.remove('active');
+    document.getElementById('onboarding-s1').style.display = 'none';
+    document.getElementById('onboarding-s2').classList.add('active');
+    document.getElementById('onboarding-s2').style.display = 'block';
+};
+
+window.completeOnboarding = () => {
+    const name = document.getElementById('onboarding-name').value.trim();
+    const city = document.getElementById('onboarding-city').value.trim() || 'Lyon';
+    const music = document.getElementById('onboarding-music').value;
+    const bible = document.getElementById('onboarding-bible').value;
+
     if (name) {
         localStorage.setItem('user_name', name);
+        localStorage.setItem('user_city', city);
+        localStorage.setItem('pref_music', music);
+        localStorage.setItem('pref_bible', bible);
+        
         const ritualOverlay = document.getElementById('morning-ritual');
         ritualOverlay.style.opacity = '0';
         setTimeout(() => {
             ritualOverlay.style.display = 'none';
-            // Refresh rituals to use the new name
             checkDailyRitual();
         }, 500);
+    } else {
+        alert("S'il te plaît, entre ton prénom pour continuer.");
     }
 };
+
 
 // Init
 const startApp = async () => {
@@ -1082,13 +1245,25 @@ const startApp = async () => {
     }
 
     // Personalization: Check for name
-    if (!localStorage.getItem('user_name')) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!localStorage.getItem('user_name') || urlParams.get('test') === 'onboarding') {
         showOnboarding();
     }
     
     renderHabits();
     checkSleepPrompt();
     checkDailyRitual();
+    setActiveNav('nav-habits');
+
+    // Add to Homescreen Initialization
+    if (window.AddToHomeScreen) {
+        window.AddToHomeScreenInstance = new window.AddToHomeScreen({
+            appName: 'Habits',
+            appIconUrl: 'icons/icon-192.png',
+            assetUrl: 'https://cdn.jsdelivr.net/gh/philfung/add-to-homescreen@3.5/dist/assets/img/',
+            maxDisplayCount: 3
+        });
+    }
 
     // iOS PWA Navigation Fix
     if (window.navigator.standalone) {
